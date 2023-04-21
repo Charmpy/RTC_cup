@@ -1,6 +1,6 @@
 import sys, select, os
 import msvcrt
-import tty, termios
+import tty, termiosdbjvxnlnl.
 
 msg = """
 Control robot
