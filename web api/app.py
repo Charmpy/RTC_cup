@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response
 import cv2
 
 app = Flask(__name__)
@@ -29,20 +29,7 @@ def video_feed():
 @app.route('/')
 def index():
     """Video streaming home page."""
-    if request.method == 'POST':
-        if request.form.get('action1') == 'MODE1':
-            pass  # do something
-        elif request.form.get('action2') == 'MODE2':
-            pass  # do something else
-        elif request.form.get('action3') == 'MODE3':
-            pass  # do something else
-        elif request.form.get('action4') == 'MODE4':
-            pass  # do something else
-        else:
-            pass  # unknown
-    elif request.method == 'GET':
-        return render_template('index.html', form="form")
-    return render_template("index.html")
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
