@@ -18,6 +18,17 @@
             <h3 class="mt-5">Live Streaming</h3>
             <img src="{{ url_for('video_feed') }}" width="100%">
         </div>
+        <div class="col">
+            <h3>Our Flask Buttons</h3>
+                    <form action="/" method="post">
+                        <input type="submit" value="MODE1" name="action1"/>
+                        <input type="submit" value="MODE2" name="action2" />
+                    </form>
+                    <form action="/" method="post">
+                        <input type="submit" value="MODE3" name="action3"/>
+                        <input type="submit" value="MODE4" name="action4" />
+                    </form>
+        </div>
     </div>
 </div>
 </body>
