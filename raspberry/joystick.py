@@ -6,7 +6,7 @@ from time import sleep
 class MyController(Controller):
     def __init__(self, **kwargs):
         Controller.__init__(self, **kwargs)
-        # self.ser = serial.Serial ("/dev/ttyACM0", 57600)
+        # self.ser = serial.Serial ("/dev/ttyACM0", 57600)  123
 
     def on_L3_y_at_rest(self):
         pass
