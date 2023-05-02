@@ -40,13 +40,6 @@ while(!(SPSR&(1<<SPIF)))
 return SPDR;
 }
 
-char SPI_Receive(void)
-{
-/* Wait for reception complete */
-while(!(SPSR & (1<<SPIF)));
-/* Return Data Register */
-return SPDR;
-}
 
 void SpiWrite(char Adr, char Data)
 {
@@ -61,7 +54,17 @@ char SpiRead(char Adr)
 	CS_SET();
  	SPI_Transmit(Adr|0b10000000);
 	char data;
-	data=SPI_Transmit(Adr+1);
+	data=SPI_Transmit(Adr+1+0b10000000);
 	CS_RESET();
 	return(data);
+}
+
+int SpiReadInt(char Adr)
+{
+	CS_SET();
+	SPI_Transmit(Adr|0b10000000);
+	int data;
+	data=(SPI_Transmit((Adr+1)|0b10000000))*256;
+	data=data+SPI_Transmit((Adr+2)|0b10000000);
+	CS_RESET();
 }

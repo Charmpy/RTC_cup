@@ -15,13 +15,15 @@
 #include "SERVO.c"
 
 #include "SPI_C.c"
-#include "MPU9250.c"
+#include "MPU9250.h"
 #include <avr/interrupt.h>
 
 volatile unsigned char count=0;
 volatile unsigned int i,j;
 volatile unsigned int SERVO_TIMING [8]={0};
 	volatile unsigned char count;
+	
+IMU MPU9250;
 int main(void)
 {
 /*
@@ -88,7 +90,10 @@ int main(void)
 	sei();
 	USART_Transmit(0x11,0);
  	spi_init();
+	 
 	InitMPU9250();
+	DataUp(&MPU9250);
+	ResetDMP_FIFO();
 //  	
 // 	CS_SET();
 //  	USART_Transmit(SPI_Transmit(0x75|0b10000000),0);
@@ -116,21 +121,23 @@ int main(void)
 // 	
     while(1)
 		{
-			USART_Transmit(SpiRead(0x3B),0);
-			delay();
+			DataUp(&MPU9250);
+			AccelOut(&MPU9250);
+			//USART_Transmit(MPU9250(0x3B),0);
+			//delay();
 
 
-/*
+
 			i=0;
 			while (i<0xFFF)
 			{
 				j=0;
-				while(j<0x2)
+				while(j<0x10)
 				{
 					j++;
 				}
 				i++;
-			}
+			}/*
 			MX_READ(ID_1,Present_Position,2,UART_SERVO);
 			delay();
 			
@@ -175,5 +182,9 @@ int main(void)
 		}
 
 	}
+
+
+
+
 
 #include "Interrupts.c"
