@@ -88,7 +88,6 @@ int main(void)
     USART_Init(0,57600);
 	UART_INIT_BUF(&UART0);
 	sei();
-	USART_Transmit(0x11,0);
  	spi_init();
 	 
 	InitMPU9250();
@@ -103,7 +102,6 @@ int main(void)
 // // 	SPI_Transmit(0x3B);
 //  	USART_Transmit(SPI_Transmit(0x75|0b10000000),0);
 // 	CS_RESET();
-	USART_Transmit(SpiRead(0x3B),0);
 	
 	//set_position(ID_1,0000);
 	/*delay();
