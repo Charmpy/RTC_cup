@@ -6,7 +6,7 @@ from time import sleep
 class MyController(Controller):
     def __init__(self, **kwargs):
         Controller.__init__(self, **kwargs)
-        # self.ser = serial.Serial ("/dev/ttyACM0", 57600)  123
+        # self.ser = serial.Serial ("/dev/ttyACM0", 57600)
 
     def on_L3_y_at_rest(self):
         pass
@@ -26,11 +26,11 @@ class MyController(Controller):
 
     def on_R3_up(self, value):
         print(str(2048 - int(value / 16)).rjust(4, '0'))
-        self.ser.write(('B' + str(2048 - int(value / 16)).rjust(4, '0')).encode())
+        # self.ser.write(('B' + str(2048 - int(value / 16)).rjust(4, '0')).encode())
 
     def on_R3_down(self, value):
         print(str(2048 - int(value / 16)).rjust(4, '0'))
-        self.ser.write(('B' + str(2048 - int(value / 16)).rjust(4, '0')).encode())
+        # self.ser.write(('B' + str(2048 - int(value / 16)).rjust(4, '0')).encode())
 
     def on_x_press(self):
         # self.ser.write(('A' + str(4095)).encode())
