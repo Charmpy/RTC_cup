@@ -12,7 +12,7 @@ class MyController(Controller):
 
         self.default_pos = {'A1': 0, 'A2': 0, 'A3': 0, 'A4': 0}
         self.current_pos = {'A1': 0, 'A2': 0, 'A3': 0, 'A4': 0}
-        self.restrictions = {'A1': (-4096, 4096), 'A2': (-4096, 4096), 'A3': (-4096, 4096), 'A4': (-4096, 4096)}
+        self.restrictions = {'A1': (0, 4095), 'A2': (0, 4095), 'A3': (0, 4095), 'A4': (0, 4095)}
 
     ##############################################
     #                   Макросы                  #
@@ -35,13 +35,15 @@ class MyController(Controller):
     ##############################################
 
     def _motor_command_generator(self, index, value, reverse=False, stp=False):
+        if stp:
+            return ("M" + str(index) + str(0).rjust(4, '0')).encode()
+
         if reverse:
             return ("M" + str(index) + str(round(1000 + (value + 34000) / (34000 * 2) * 1000)).rjust(4, '0')).encode()
         else:
             return ("M" + str(index) + str(round((value + 34000) / (34000 * 2) * 1000)).rjust(4, '0')).encode()
 
-        if stp:
-            return ("M" + str(index) + str(0).rjust(4, '0')).encode()
+
 
     def on_R2_press(self, value):
         self.ser.write(self._motor_command_generator(1, value, self.R1_on))
@@ -65,11 +67,11 @@ class MyController(Controller):
     #                Сервоприводы                #
     ##############################################
 
-    def send(self, lit, sign, val=100):
-        if lit[0] != 'A' or self.restrictions[lit][0] < self.current_pos[lit] + sign * val < self.restrictions[lit][1]:
-            self.ser.write((lit + str(sign * val).rjust(4, '0')).encode())
-            if lit[0] == 'A':
-                self.current_pos[lit] += sign * val
+    def send(self, lit, sign, val = 100):
+        if lit[0] == 'A' and self.restrictions[lit][0] <= self.current_pos[lit] + sign * val <= self.restrictions[lit][1]:
+            self.current_pos[lit] += sign * val
+            self.ser.write((lit + str(self.current_pos[lit]).rjust(4, '0')).encode())
+
 
     def on_x_press(self):
         self.send('A2', 1)
