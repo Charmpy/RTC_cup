@@ -67,10 +67,12 @@ class MyController(Controller):
     #                Сервоприводы                #
     ##############################################
 
-    def send(self, lit, sign, val = 100):
+    def send(self, lit, sign, value = 100):
         if lit[0] == 'A' and self.restrictions[lit][0] <= self.current_pos[lit] + sign * val <= self.restrictions[lit][1]:
-            self.current_pos[lit] += sign * val
+            self.current_pos[lit] += sign * value
             self.ser.write((lit + str(self.current_pos[lit]).rjust(4, '0')).encode())
+        elif lit[0] == 'S':
+            self.ser.write((lit + str(sign * value).rjust(4, '0')).encode())
 
 
     def on_x_press(self):
@@ -96,6 +98,51 @@ class MyController(Controller):
 
     def on_right_arrow_press(self):
         self.send('A3', 1)
+
+    ##############################################
+    #         Сервоприводы манипулятора          #
+    ##############################################
+
+    def arm_command_generator(self, lit, value):
+        self.ser.write((lit + str(value).rjust(4, '0')).encode())
+
+    def on_L3_right(self, value):
+        self.arm_command_generator('H1', value)
+
+    def on_L3_left(self, value):
+        self.arm_command_generator('H1', -value)
+
+    def on_L3_up(self, value):
+        self.arm_command_generator('H2', value)
+
+    def on_L3_down(self, value):
+        self.arm_command_generator('H2', -value)
+
+    def on_L3_x_at_rest(self):
+        self.arm_command_generator('H1', 0)
+
+    def on_L3_y_at_rest(self):
+        self.arm_command_generator('H2', 0)
+
+    def on_R3_up(self, value):
+        self.arm_command_generator('H3', value)
+
+    def on_R3_down(self, value):
+        self.arm_command_generator('H3', -value)
+
+    def on_R3_right(self, value):
+        self.arm_command_generator('H4', value)
+
+    def on_R3_left(self, value):
+        self.arm_command_generator('H4', -value)
+
+    def on_R3_y_at_rest(self):
+        self.arm_command_generator('H3', 0)
+
+    def on_R3_x_at_rest(self):
+        self.arm_command_generator('H4', 0)
+
+
 
 
 controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
